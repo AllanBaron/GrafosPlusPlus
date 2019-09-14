@@ -23,7 +23,7 @@ bool GrafoLista::validaLabel(string label){
 }
 
 bool GrafoLista::inserirAresta(int origem, int destino, int peso ){
-    if (existeAresta(origem,destino) == 0.0) {
+    if (existeAresta(origem,destino) == 0) {
         if((this->direcionado || (!this->direcionado && origem != destino)) && (origem < this->label.size()) && (destino < this->label.size())){
             if (!this->direcionado)
                this->lista[destino].push_back(Adjacente(origem,peso));
@@ -39,7 +39,7 @@ void GrafoLista::imprimeGrafo(){
     for (string aux : this->label) {
       cout << aux << " -> ";
       for (Adjacente var : this->lista[coluna]) {
-          cout << "[ " << var.indice  << " : " << var.peso << " ] ";
+          cout << "[" << var.indice  << ":" << var.peso << "]";
        }
       cout << endl;
       ++coluna;
@@ -54,13 +54,13 @@ double GrafoLista::existeAresta(int origem, int destino){
             }
         }
      }
-    return 0.0;
+    return 0;
 }
 
 vector<int> GrafoLista::retornarVizinhos(int vertice){
     vector<int> retorno;
     for (Adjacente aux : lista[vertice] ) {
-        if(aux.indice != 0){
+        if(aux.peso != 0){
             retorno.push_back(aux.indice);
         }
     }

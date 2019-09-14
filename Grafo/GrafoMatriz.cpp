@@ -14,7 +14,7 @@ bool GrafoMatriz::validaLabel(string label){
 }
 
 bool GrafoMatriz::inserirAresta(int origem, int destino, int peso){
-    if (existeAresta(origem,destino) == 0.0) {
+    if (existeAresta(origem,destino) == 0) {
         if((this->direcionado || (!this->direcionado && origem != destino)) && (origem < this->label.size()) && (destino < this->label.size())){
             if (!this->direcionado)
                this->matriz[origem][destino] = peso;
@@ -32,10 +32,10 @@ double GrafoMatriz::existeAresta(int origem, int destino){
 bool GrafoMatriz::inserirVertice(string label){
     if(validaLabel(label)){
         this->label.push_back(label);
-        this->matriz.push_back(vector<double>(qtdVertice+1,0.0));
+        this->matriz.push_back(vector<double>(qtdVertice+1, 0));
 
         for (int var = 0; var <= qtdVertice; var++) {
-            this->matriz[var].push_back(0.0);
+            this->matriz[var].push_back(0);
         }
         ++qtdVertice;
         return true;
@@ -45,11 +45,11 @@ bool GrafoMatriz::inserirVertice(string label){
 
 vector<int> GrafoMatriz::retornarVizinhos(int vertice){
     vector<int> retorno;
-    for (int var = 0; var < label.size(); ++var) {
-        if(matriz[vertice][var] != 0){
-            retorno.push_back(var);
+        for (int var = 0; var < matriz[vertice].size(); var++) {
+            if(matriz.at(vertice).at(var) != 0){
+                retorno.push_back(var);
+            }
         }
-    }
     return retorno;
 }
 
