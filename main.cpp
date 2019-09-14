@@ -5,8 +5,20 @@
 
 using namespace std;
 
-void exemploGrafoMatriz() {
-    GrafoMatriz *matriz = new GrafoMatriz(false, true);
+void printHeader(string text) {
+    for(int i = 0; i < text.length(); i++)
+        cout << "-";
+    cout << endl;
+
+    cout << text << endl;
+
+    for(int i = 0; i < text.length(); i++)
+        cout << "-";
+    cout << "\n" << endl;
+}
+
+GrafoMatriz* exemploGrafoMatriz() {
+    GrafoMatriz *matriz = new GrafoMatriz(false, false);
     matriz->inserirVertice("A");
     matriz->inserirVertice("B");
     matriz->inserirVertice("C");
@@ -22,12 +34,11 @@ void exemploGrafoMatriz() {
     matriz->inserirAresta(2,4,2);
     matriz->inserirAresta(3,1,2);
 
-
-    matriz->imprimeGrafo();
+    return matriz;
 }
 
-void exemploGrafoLista() {
-    GrafoLista *lista = new GrafoLista(false, true);
+GrafoLista* exemploGrafoLista() {
+    GrafoLista *lista = new GrafoLista(false, false);
     lista->inserirVertice("A");
     lista->inserirVertice("B");
     lista->inserirVertice("C");
@@ -43,13 +54,51 @@ void exemploGrafoLista() {
     lista->inserirAresta(2,4,2);
     lista->inserirAresta(3,1,2);
 
+    return lista;
+}
 
-    lista->imprimeGrafo();
+void buscaLargura(Grafo *gafo, int indice = 0) {
+    vector<int> resultado = gafo->busca_Largura(indice);
+
+    for(int x: resultado)
+          cout<< x <<"-";
+
+    cout << endl;
+}
+
+void buscaProfundidade(Grafo *gafo, int indice = 0) {
+    vector<int> resultado = gafo->busca_Profundidade(indice);
+
+    for(int x: resultado)
+          cout<< x <<"-";
+
+    cout << endl;
 }
 
 int main() {
-    exemploGrafoMatriz();
-    exemploGrafoLista();
+    printHeader("Grafo Matriz");
+    exemploGrafoMatriz()->imprimeGrafo();
+    cout << "\n" << endl;
+
+    printHeader("Grafo Lista");
+    exemploGrafoLista()->imprimeGrafo();
+    cout << "\n" << endl;
+
+    printHeader("Busca em Largura com Grafo Matriz");
+    buscaLargura(exemploGrafoMatriz());
+    cout << "\n" << endl;
+
+    printHeader("Busca em Largura com Grafo Lista");
+    buscaLargura(exemploGrafoLista());
+    cout << "\n" << endl;
+
+    printHeader("Busca em Profundidade com Grafo Matriz");
+    buscaProfundidade(exemploGrafoMatriz());
+    cout << "\n" << endl;
+
+    printHeader("Busca em Profundidade com Grafo Lista");
+    buscaProfundidade(exemploGrafoLista());
+    cout << "\n" << endl;
 
     return 0;
 }
