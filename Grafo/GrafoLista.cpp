@@ -22,13 +22,13 @@ bool GrafoLista::validaLabel(string label){
     return true;
 }
 
-bool GrafoLista::inserirAresta(int origem, int destino, int peso ){
-    if (existeAresta(origem,destino) == 0) {
+bool GrafoLista::inserirAresta(int origem, int destino, int peso){
+    if (!existeAresta(origem, destino)) {
         if((this->direcionado || (!this->direcionado && origem != destino)) && (origem < this->label.size()) && (destino < this->label.size())){
-            if (!this->direcionado)
-               this->lista[destino].push_back(Adjacente(origem,peso));
-               this->lista[origem].push_back(Adjacente(destino,peso));
-               return true;
+           this->lista[destino].push_back(Adjacente(origem, this->ponderado ? peso : 1));
+           this->lista[origem].push_back(Adjacente(destino, this->ponderado ? peso : 1));
+
+           return true;
         }
     }
     return false;

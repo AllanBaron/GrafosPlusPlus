@@ -3,7 +3,7 @@
 GrafoMatriz::GrafoMatriz(bool direcionado, bool ponderado) : Grafo (direcionado, ponderado) {}
 
 string GrafoMatriz::labelVertice(int indice){
-    return this->label[indice];
+    return this->label.at(indice);
 }
 
 bool GrafoMatriz::validaLabel(string label){
@@ -16,10 +16,10 @@ bool GrafoMatriz::validaLabel(string label){
 bool GrafoMatriz::inserirAresta(int origem, int destino, int peso){
     if (existeAresta(origem,destino) == 0) {
         if((this->direcionado || (!this->direcionado && origem != destino)) && (origem < this->label.size()) && (destino < this->label.size())){
-            if (!this->direcionado)
-               this->matriz[origem][destino] = peso;
-               this->matriz[destino][origem] = peso;
-               return true;
+           this->matriz[origem][destino] = this->ponderado ? peso : 1;
+           this->matriz[destino][origem] = this->ponderado ? peso : 1;
+
+           return true;
         }
     }
     return false;
@@ -46,12 +46,14 @@ bool GrafoMatriz::inserirVertice(string label){
 vector<int> GrafoMatriz::retornarVizinhos(int vertice){
     vector<int> retorno;
         for (int var = 0; var < matriz[vertice].size(); var++) {
-            if(matriz.at(vertice).at(var) != 0){
+            if(matriz.at(vertice).at(var) != 0.0){
                 retorno.push_back(var);
             }
         }
     return retorno;
 }
+
+
 
 void GrafoMatriz::imprimeGrafo() {
     cout << " ";

@@ -6,6 +6,11 @@
 #include <string>
 #include <stack>
 #include <queue>
+#include <fstream>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include<tuple>
 
 using namespace std;
 
@@ -34,6 +39,15 @@ class Grafo
 
         vector<int> busca_Profundidade(int indice);
         vector<int> busca_Largura(int indice);
+
+        template <class T>
+        T* lerArquivo(T *grafo, string caminhoArquivo);
+        int verticeGrau(string label);
+        int verticeGrau(int index);
+        auto welshPowell() -> vector<int>;
+        auto dsatur() -> vector<int>;
+
+        virtual ~Grafo();
 };
 
 #endif // GRAFO_HPP
