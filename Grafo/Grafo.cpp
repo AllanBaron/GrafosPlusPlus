@@ -125,7 +125,7 @@ auto Grafo::welshPowell() -> vector<int> {
    vector< pair<int, string> > grau;
    vector<int> paleta(this->label.size(),0);
 
-   for (string var: label)
+   for (string var: this->label)
        grau.push_back( make_pair(verticeGrau(var) ,var) );
 /*
    for (int var = 0;var < grau.size(); var++) {
@@ -138,14 +138,15 @@ auto Grafo::welshPowell() -> vector<int> {
 
    int cor = 1;
    for (int var = 0;var < paleta.size();var++) {
-       if(paleta.at(var) == 0)
+       if(paleta.at(var) == 0){
            paleta.at(var) = cor;
 
-       int origem = find(this->label.begin(), this->label.end(), grau.at(var).second) - this->label.begin();
-       for (int var1 = var;var1 < paleta.size();var1++) {
-           int destino = find(this->label.begin(), this->label.end(), grau.at(var1).second) - this->label.begin();
-           if(existeAresta(origem, destino) == 0.0 && paleta.at(var1) == 0)
-               paleta.at(var1) = cor;
+           int origem = find(this->label.begin(), this->label.end(), grau.at(var).second) - this->label.begin();
+           for (int var1 = var;var1 < paleta.size();var1++) {
+               int destino = find(this->label.begin(), this->label.end(), grau.at(var1).second) - this->label.begin();
+               if(existeAresta(origem, destino) == 0.0 && paleta.at(var1) == 0)
+                   paleta.at(var1) = cor;
+           }
        }
        cor++;
    }

@@ -201,11 +201,14 @@ int main() {
     matriz = lerArquivo<GrafoMatriz>(matriz, "../assets/trabalho-28cores.txt");
     vector<int> r = matriz->welshPowell();
     //int max = max_element(r.begin(),r.end());
+
     cout << "|";
     for(int var : r)
         cout<< var << "|";
     cout << endl << "total de cores: " << *max_element(r.begin(), r.end()) << endl;;
+
     //matriz->imprimeGrafo();
+
 
     /*
     vector<double> predictions{ 1.22, 3.22, 2.22, 4.22 };
@@ -216,6 +219,7 @@ int main() {
             cout << i << "\t" << predictions[i] << endl;
     }
     */
+
     //exemploWelshPowell();
 
     //exemploDsatur();
