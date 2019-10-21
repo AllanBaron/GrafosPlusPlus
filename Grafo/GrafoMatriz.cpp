@@ -29,6 +29,10 @@ double GrafoMatriz::existeAresta(int origem, int destino){
     return this->matriz[origem][destino];
 }
 
+double GrafoMatriz::existeAresta(size_t origem, size_t destino){
+    return this->matriz[origem][destino];
+}
+
 bool GrafoMatriz::inserirVertice(string label){
     if(validaLabel(label)){
         this->label.push_back(label);
@@ -53,9 +57,9 @@ vector<int> GrafoMatriz::retornarVizinhos(int vertice){
     return retorno;
 }
 
-vector<int> GrafoMatriz::retornarVizinhos(size_t vertice){
-    vector<int> retorno;
-        for (int var = 0; var < matriz[vertice].size(); var++) {
+vector<size_t> GrafoMatriz::retornarVizinhos(size_t vertice){
+    vector<size_t> retorno;
+        for (size_t var = 0; var < matriz[vertice].size(); var++) {
             if(matriz.at(vertice).at(var) != 0.0){
                 retorno.push_back(var);
             }

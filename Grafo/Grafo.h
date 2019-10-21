@@ -34,8 +34,9 @@ class Grafo
         virtual bool inserirVertice(string label) = 0;
         virtual bool inserirAresta(int origem, int destino, int peso = 1) = 0;
         virtual double existeAresta(int origem, int destino) = 0;
+        virtual double existeAresta(size_t origem, size_t destino) = 0;
         virtual vector<int> retornarVizinhos(int vertice) = 0;
-
+        virtual vector<size_t> retornarVizinhos(size_t vertice) = 0;
         virtual void imprimeGrafo() = 0;
 
         vector<int> busca_Profundidade(int indice);

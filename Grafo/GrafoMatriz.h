@@ -17,8 +17,9 @@ class GrafoMatriz : public Grafo
         bool inserirVertice(string label);
         bool inserirAresta(int origem, int destino, int peso = 1);
         double existeAresta(int origem, int destino);
+        double existeAresta(size_t origem, size_t destino);
         vector<int> retornarVizinhos(int vertice);
-        vector<int> retornarVizinhos(size_t vertice);
+        vector<size_t> retornarVizinhos(size_t vertice);
         bool validaLabel(string label);
 
         void imprimeGrafo();

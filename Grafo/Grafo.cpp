@@ -305,7 +305,7 @@ auto Grafo::kruskal() -> int {
     for(size_t var = 0;var < size_t(label.size());var++)
         forest.push_back({var});
 
-    for (auto cont = 0;cont < int(label.size());cont++) {
+    for (size_t cont = 0;cont < size_t(label.size());cont++) {
         for(auto var : retornarVizinhos(cont)){
             if(find_if(control.begin(), control.end(),[=](tuple<size_t, size_t, double>& a) { return (get<1>(a) == cont && get<0>(a) == var); }) == control.end())
                 control.push_back(make_tuple(cont, var, existeAresta(cont, var)));

@@ -57,6 +57,17 @@ double GrafoLista::existeAresta(int origem, int destino){
     return 0;
 }
 
+double GrafoLista::existeAresta(size_t origem, size_t destino){
+    if(origem < label.size() && label.size() > destino){
+        for (Adjacente aux : lista[origem]) {
+            if(aux.indice == destino){
+                return aux.peso;
+            }
+        }
+     }
+    return 0;
+}
+
 vector<int> GrafoLista::retornarVizinhos(int vertice){
     vector<int> retorno;
     for (Adjacente aux : lista[vertice] ) {
@@ -68,8 +79,8 @@ vector<int> GrafoLista::retornarVizinhos(int vertice){
     return retorno;
 }
 
-vector<int> GrafoLista::retornarVizinhos(size_t vertice){
-    vector<int> retorno;
+vector<size_t> GrafoLista::retornarVizinhos(size_t vertice){
+    vector<size_t> retorno;
     for (Adjacente aux : lista[vertice] ) {
         if(aux.peso != 0){
             retorno.push_back(aux.indice);
