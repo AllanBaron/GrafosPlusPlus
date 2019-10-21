@@ -269,25 +269,26 @@ auto Grafo::prim(size_t index) -> int {
     for (size_t i=0; i < this->label.size(); i++)
         control.push_back(i);
 
+    control.erase(find(control.begin(), control.end(), index));
+
     while (!control.empty()) {
-        control.erase(find(control.begin(), control.end(), index));
         vector<tuple<size_t, size_t, double>> s;
 
-        for (auto vizinho : retornarVizinhos(index)){
-            if(find(control.begin() , control.end(), vizinho) != control.end())
-                s.push_back(make_tuple(index, vizinho, existeAresta(index, vizinho)));
+        for(auto var : control){
+            for (auto vizinho : retornarVizinhos(var)){
+                if(find(control.begin() , control.end(), vizinho) == control.end())
+                    s.push_back(make_tuple(vizinho, var,  existeAresta(vizinho, var)));
+            }
         }
 
         sort(s.begin(), s.end(), [](tuple<size_t, size_t, double>& a, const tuple<size_t, size_t, double>& b){ return (get<2>(a) < get<2>(b)); });
 
-        for(auto var : s){
-            if(find(control.begin() , control.end(), get<1>(var)) != control.end()){
-                solution.push_back(var);
-                index = get<1>(var);
-                break;
-            }
-        }
+        solution.push_back(s.at(0));
+        index = get<1>(s.at(0));
+
         s.clear();
+
+        control.erase(find(control.begin(), control.end(), index));
     }
 
     for(auto var : solution)

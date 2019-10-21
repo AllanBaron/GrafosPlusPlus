@@ -182,17 +182,17 @@ void exemploPrim(){
     matriz->inserirAresta(4,3,7);
     matriz->inserirAresta(3,5,4);
 
-    cout << matriz->kruskal() << endl;
-    //cout << matriz->prim(2) << endl;
+    //cout << matriz->kruskal() << endl;
+    cout << matriz->prim(2) << endl;
     //matriz->imprimeGrafo();
 }
 
 int main() {
-    GrafoMatriz * matriz = nullptr;
-    matriz = lerArquivo<GrafoMatriz>(matriz,"../assets/GrafosMST/1000vertices25%Arestas.txt");
+    //GrafoMatriz * matriz = nullptr;
+    //matriz = lerArquivo<GrafoMatriz>(matriz,"../assets/GrafosMST/1000vertices25%Arestas.txt");
     //matriz->imprimeGrafo();
-    cout << matriz->kruskal() << endl;
-    //exemploPrim();
+    //cout << matriz->kruskal() << endl;
+    exemploPrim();
     return 0;
 }
 
