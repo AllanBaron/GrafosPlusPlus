@@ -53,7 +53,15 @@ vector<int> GrafoMatriz::retornarVizinhos(int vertice){
     return retorno;
 }
 
-
+vector<int> GrafoMatriz::retornarVizinhos(size_t vertice){
+    vector<int> retorno;
+        for (int var = 0; var < matriz[vertice].size(); var++) {
+            if(matriz.at(vertice).at(var) != 0.0){
+                retorno.push_back(var);
+            }
+        }
+    return retorno;
+}
 
 void GrafoMatriz::imprimeGrafo() {
     cout << " ";

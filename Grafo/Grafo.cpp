@@ -90,37 +90,7 @@ vector<int> Grafo::busca_Largura(int indice){
     }
     return resultado;
 }
-/*
-template <class T>
-T* Grafo::lerArquivo(T *grafo, string caminhoArquivo){
-    ifstream arquivo(caminhoArquivo);
 
-    int qtdVertices = 0, qtdAresta = 0, direcionado = 0, ponderado = 0;
-    arquivo >> qtdVertices >> qtdAresta >> direcionado >> ponderado;
-
-    grafo = new T(direcionado, ponderado);
-
-    while (qtdVertices > 0) {
-        string linha;
-        arquivo >> linha;
-        grafo->inserirVertice(linha);
-        qtdVertices--;
-    }
-
-    while (qtdAresta > 0) {
-        int origem = 0, destino = 0, peso = 1;
-
-        if (ponderado)
-            arquivo >> origem >> destino >> peso;
-        else
-            arquivo >> origem >> destino;
-
-        grafo->inserirAresta(origem, destino, peso);
-        qtdAresta--;
-    }
-    return grafo;
-}
-*/
 auto Grafo::welshPowell() -> vector<int> {
    vector< pair<int, string> > grau;
    vector<int> paleta(this->label.size(),0);
@@ -291,4 +261,82 @@ int Grafo::verticeGrau(int index){
     return this->retornarVizinhos(index).size();
 }
 
+auto Grafo::prim(size_t index) -> int {
+    vector<tuple<size_t, size_t, double>> solution;
+    vector<size_t> control;
+    int result = 0;
+
+    for (size_t i=0; i < this->label.size(); i++)
+        control.push_back(i);
+
+    while (!control.empty()) {
+        control.erase(find(control.begin(), control.end(), index));
+        vector<tuple<size_t, size_t, double>> s;
+
+        for (auto vizinho : retornarVizinhos(index)){
+            if(find(control.begin() , control.end(), vizinho) != control.end())
+                s.push_back(make_tuple(index, vizinho, existeAresta(index, vizinho)));
+        }
+
+        sort(s.begin(), s.end(), [](tuple<size_t, size_t, double>& a, const tuple<size_t, size_t, double>& b){ return (get<2>(a) < get<2>(b)); });
+
+        for(auto var : s){
+            if(find(control.begin() , control.end(), get<1>(var)) != control.end()){
+                solution.push_back(var);
+                index = get<1>(var);
+                break;
+            }
+        }
+        s.clear();
+    }
+
+    for(auto var : solution)
+        result += get<2>(var);
+
+    return result;
+}
+
+auto Grafo::kruskal() -> int {
+    vector<tuple<size_t, size_t, double>> solution;
+    vector<tuple<size_t, size_t, double>> control;
+    vector<vector<size_t>> forest;
+    int result = 0;
+
+    for(size_t var = 0;var < size_t(label.size());var++)
+        forest.push_back({var});
+
+    for (auto cont = 0;cont < int(label.size());cont++) {
+        for(auto var : retornarVizinhos(cont)){
+            if(find_if(control.begin(), control.end(),[=](tuple<size_t, size_t, double>& a) { return (get<1>(a) == cont && get<0>(a) == var); }) == control.end())
+                control.push_back(make_tuple(cont, var, existeAresta(cont, var)));
+        }
+    }
+
+    sort(control.begin(), control.end(), [](tuple<size_t, size_t, double>& a, tuple<size_t, size_t, double>& b){ return (get<2>(a) < get<2>(b)); });
+
+    for(auto var : control){
+        size_t var0 = 0, var01 = 0, var1 = 0, var10 = 0;
+        for(size_t x = 0; x < size_t(forest.size()) ; x++){
+            for(size_t x1 = 0; x1 < size_t(forest.at(x).size()) ; x1++){
+                if(forest.at(x).at(x1) == get<0>(var)){
+                    var0 = x;
+                    var01 = x1;
+                }
+                if(forest.at(x).at(x1) == get<1>(var)){
+                    var1 = x;
+                    var10 = x1;
+                }
+            }
+        }
+        if(var0 != var1){
+            solution.push_back(var);
+            forest.at(var0).insert(forest.at(var0).end(), forest.at(var1).begin(), forest.at(var1).end());
+            forest.erase(forest.begin() + int(var1));
+        }
+    }
+    control.clear();
+    for(auto var : solution)
+        result += get<2>(var);
+    return result;
+}
 Grafo::~Grafo() = default;

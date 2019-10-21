@@ -19,6 +19,7 @@ class GrafoLista : public Grafo
         bool inserirAresta(int origem, int destino, int peso = 1);
         double existeAresta(int origem, int destino);
         vector<int> retornarVizinhos(int vertice);
+        vector<int> retornarVizinhos(size_t vertice);
         bool validaLabel(string label);
 
         void imprimeGrafo();

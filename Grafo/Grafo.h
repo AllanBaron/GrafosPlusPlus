@@ -11,6 +11,7 @@
 #include <utility>
 #include <functional>
 #include<tuple>
+#include <map>
 
 using namespace std;
 
@@ -40,12 +41,13 @@ class Grafo
         vector<int> busca_Profundidade(int indice);
         vector<int> busca_Largura(int indice);
 
-        template <class T>
-        T* lerArquivo(T *grafo, string caminhoArquivo);
         int verticeGrau(string label);
         int verticeGrau(int index);
         auto welshPowell() -> vector<int>;
         auto dsatur() -> vector<int>;
+
+        auto prim(size_t index) -> int;
+        auto kruskal() -> int;
 
         virtual ~Grafo();
 };

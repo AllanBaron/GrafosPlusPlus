@@ -67,3 +67,14 @@ vector<int> GrafoLista::retornarVizinhos(int vertice){
 
     return retorno;
 }
+
+vector<int> GrafoLista::retornarVizinhos(size_t vertice){
+    vector<int> retorno;
+    for (Adjacente aux : lista[vertice] ) {
+        if(aux.peso != 0){
+            retorno.push_back(aux.indice);
+        }
+    }
+
+    return retorno;
+}

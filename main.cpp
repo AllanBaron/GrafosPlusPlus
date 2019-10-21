@@ -162,68 +162,33 @@ void exemploDsatur(){
     cout << endl;
 }
 
-int main() {
-    /*
-    printHeader("Grafo Matriz");
-    exemploGrafoMatriz()->imprimeGrafo();
-    cout << "\n" << endl;
+void exemploPrim(){
+    GrafoMatriz * matriz = new  GrafoMatriz(false, true);
+    matriz->inserirVertice("A");
+    matriz->inserirVertice("B");
+    matriz->inserirVertice("C");
+    matriz->inserirVertice("D");
+    matriz->inserirVertice("E");
+    matriz->inserirVertice("F");
 
-    printHeader("Grafo Lista");
-    exemploGrafoLista()->imprimeGrafo();
-    cout << "\n" << endl;
+    matriz->inserirAresta(0,2,7);
+    matriz->inserirAresta(0,4,10);
+    matriz->inserirAresta(0,3,2);
+    matriz->inserirAresta(2,4,9);
+    matriz->inserirAresta(2,1,3);
+    matriz->inserirAresta(2,5,3);
+    matriz->inserirAresta(1,5,2);
+    matriz->inserirAresta(4,5,8);
+    matriz->inserirAresta(4,3,7);
+    matriz->inserirAresta(3,5,4);
 
-    printHeader("Busca em Largura com Grafo Matriz");
-    buscaLargura(exemploGrafoMatriz());
-    cout << "\n" << endl;
-
-    printHeader("Busca em Largura com Grafo Lista");
-    buscaLargura(exemploGrafoLista());
-    cout << "\n" << endl;
-
-    printHeader("Busca em Profundidade com Grafo Matriz");
-    buscaProfundidade(exemploGrafoMatriz());
-    cout << "\n" << endl;
-
-    printHeader("Busca em Profundidade com Grafo Lista");
-    buscaProfundidade(exemploGrafoLista());
-    cout << "\n" << endl;
-    */
-    /*
-    exemploGrafoMatriz()->imprimeGrafo();
-    cout << endl;
-
-    exemploGrafoLista()->imprimeGrafo();
-    cout << endl;
-    */
-
-
-    GrafoMatriz *matriz;// = new GrafoMatriz(false, false);
-    matriz = lerArquivo<GrafoMatriz>(matriz, "../assets/trabalho-28cores.txt");
-    vector<int> r = matriz->welshPowell();
-    //int max = max_element(r.begin(),r.end());
-
-    cout << "|";
-    for(int var : r)
-        cout<< var << "|";
-    cout << endl << "total de cores: " << *max_element(r.begin(), r.end()) << endl;;
-
+    cout << matriz->kruskal() << endl;
+    //cout << matriz->prim(2) << endl;
     //matriz->imprimeGrafo();
+}
 
-
-    /*
-    vector<double> predictions{ 1.22, 3.22, 2.22, 4.22 };
-    vector<int> indices{ 0, 1, 2, 3 };
-
-    std::sort(indices.begin(), indices.end(),[&predictions](int &a, int &b) {return predictions[a] > predictions[b];});
-    for (auto i: indices) {
-            cout << i << "\t" << predictions[i] << endl;
-    }
-    */
-
-    //exemploWelshPowell();
-
-    //exemploDsatur();
-
+int main() {
+    exemploPrim();
     return 0;
 }
 
