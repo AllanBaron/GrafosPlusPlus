@@ -183,16 +183,62 @@ void exemploPrim(){
     matriz->inserirAresta(3,5,4);
 
     //cout << matriz->kruskal() << endl;
-    cout << matriz->prim(2) << endl;
+    //cout << matriz->prim(2) << endl;
     //matriz->imprimeGrafo();
 }
+/*
+template <typename R, typename T>
+auto test(T function) -> std::pair<std::chrono::duration<double>, R> {
+    auto start = std::chrono::high_resolution_clock::now();
+    R s = function();
+    auto end = std::chrono::high_resolution_clock::now();
 
+    return { std::chrono::duration<double>(end - start), s };
+}
+
+auto testingMst() -> void {
+    GrafoMatriz *matriz = nullptr;
+    matriz = lerArquivo<GrafoMatriz>(matriz,"../assets/GrafosMST/50vertices25%Arestas.txt");
+
+    test<int>([&matriz]() { return matriz->prim(2); });
+}
+*/
 int main() {
-    //GrafoMatriz * matriz = nullptr;
-    //matriz = lerArquivo<GrafoMatriz>(matriz,"../assets/GrafosMST/1000vertices25%Arestas.txt");
+    //50vertices25%Arestas
+    //50vertices50%Arestas
+    //50vertices100%Arestas
+    //500vertices25%Arestas
+    //500vertices50%Arestas
+    //500vertices100%Arestas
+    //1000vertices25%Arestas
+    GrafoMatriz * grafo = nullptr;
+    grafo = lerArquivo<GrafoMatriz>(grafo,"../assets/GrafosMST/1000vertices25%Arestas.txt");
+    auto start = std::chrono::high_resolution_clock::now();
+    //grafo->prim(2);
+    grafo->kruskal();
+    auto end = std::chrono::high_resolution_clock::now();
+    chrono::duration<double> time = chrono::duration<double>(end - start);
+
+    cout << time.count() << " seconds." << endl;
+
+    //test<int>([&grafo]() { return grafo->prim(2); });
+
+    /*
+    chrono::time_point<chrono::system_clock> start, end;
+    start = chrono::system_clock::now();
+
+    cout << matriz->prim(2) << endl;
+
+    end = chrono::system_clock::now();
+    int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end-start).count();
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << "finished computation at " << ctime(&end_time)
+                  << "elapsed time: " << elapsed_seconds << "s\n";
+    */
     //matriz->imprimeGrafo();
     //cout << matriz->kruskal() << endl;
-    exemploPrim();
+    //exemploPrim();
     return 0;
 }
 

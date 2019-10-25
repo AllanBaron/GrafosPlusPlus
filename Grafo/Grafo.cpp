@@ -261,13 +261,11 @@ int Grafo::verticeGrau(int index){
     return this->retornarVizinhos(index).size();
 }
 
-auto Grafo::prim(size_t index) -> int {
+auto Grafo::prim(size_t index) -> vector<tuple<size_t, size_t, double>> {
     vector<tuple<size_t, size_t, double>> solution;
-    vector<size_t> control;
-    int result = 0;
+    vector<size_t> control(this->label.size());
 
-    for (size_t i=0; i < this->label.size(); i++)
-        control.push_back(i);
+    iota(control.begin(), control.end(), 0);
 
     control.erase(find(control.begin(), control.end(), index));
 
@@ -290,18 +288,13 @@ auto Grafo::prim(size_t index) -> int {
 
         control.erase(find(control.begin(), control.end(), index));
     }
-
-    for(auto var : solution)
-        result += get<2>(var);
-
-    return result;
+    return solution;
 }
 
-auto Grafo::kruskal() -> int {
+auto Grafo::kruskal() -> vector<tuple<size_t, size_t, double>> {
     vector<tuple<size_t, size_t, double>> solution;
     vector<tuple<size_t, size_t, double>> control;
     vector<vector<size_t>> forest;
-    int result = 0;
 
     for(size_t var = 0;var < size_t(label.size());var++)
         forest.push_back({var});
@@ -336,8 +329,6 @@ auto Grafo::kruskal() -> int {
         }
     }
     control.clear();
-    for(auto var : solution)
-        result += get<2>(var);
-    return result;
+    return solution;
 }
 Grafo::~Grafo() = default;

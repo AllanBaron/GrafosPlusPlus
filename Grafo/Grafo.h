@@ -10,8 +10,11 @@
 #include <algorithm>
 #include <utility>
 #include <functional>
-#include<tuple>
+#include <numeric>
+#include <tuple>
 #include <map>
+#include <chrono>
+#include <ctime>
 
 using namespace std;
 
@@ -47,8 +50,8 @@ class Grafo
         auto welshPowell() -> vector<int>;
         auto dsatur() -> vector<int>;
 
-        auto prim(size_t index) -> int;
-        auto kruskal() -> int;
+        auto prim(size_t index) -> vector<tuple<size_t, size_t, double>>;
+        auto kruskal() -> vector<tuple<size_t, size_t, double>>;
 
         virtual ~Grafo();
 };
