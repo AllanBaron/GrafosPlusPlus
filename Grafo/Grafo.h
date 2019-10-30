@@ -46,8 +46,9 @@ class Grafo
         vector<int> busca_Largura(int indice);
 
         int verticeGrau(string label);
-        int verticeGrau(int index);
-        auto welshPowell() -> vector<int>;
+        int verticeGrau(size_t index);
+        auto welshPowellHELP() -> void;
+        auto welshPowell() -> vector<tuple<size_t, int, int>>;
         auto dsatur() -> vector<int>;
 
         auto prim(size_t index) -> vector<tuple<size_t, size_t, double>>;

@@ -91,36 +91,29 @@ vector<int> Grafo::busca_Largura(int indice){
     return resultado;
 }
 
-auto Grafo::welshPowell() -> vector<int> {
-   vector< pair<int, string> > grau;
-   vector<int> paleta(this->label.size(),0);
+auto Grafo::welshPowell() -> vector<tuple<size_t, int, int>>
+{
+    vector<tuple<size_t, int, int>> cores;
 
-   for (string var: this->label)
-       grau.push_back( make_pair(verticeGrau(var) ,var) );
-/*
-   for (int var = 0;var < grau.size(); var++) {
-       cout << grau.at(var).first << " : " <<  grau.at(var).second << endl;
-   }
-   cout << endl;*/
+    for(size_t var = 0; var < size_t(label.size()); var++)
+        cores.push_back(make_tuple(var, verticeGrau(var), 0));
 
-   sort(grau.begin(), grau.end());
-   reverse(grau.begin(), grau.end());
+    sort(cores.begin(), cores.end(),[](tuple<size_t, int, int> &a, tuple<size_t, int, int> &b){return get<1>(a) > get<1>(b);});
 
-   int cor = 1;
-   for (int var = 0;var < paleta.size();var++) {
-       if(paleta.at(var) == 0){
-           paleta.at(var) = cor;
-
-           int origem = find(this->label.begin(), this->label.end(), grau.at(var).second) - this->label.begin();
-           for (int var1 = var;var1 < paleta.size();var1++) {
-               int destino = find(this->label.begin(), this->label.end(), grau.at(var1).second) - this->label.begin();
-               if(existeAresta(origem, destino) == 0.0 && paleta.at(var1) == 0)
-                   paleta.at(var1) = cor;
-           }
-       }
-       cor++;
-   }
-   return paleta;
+    vector<size_t> vizinhos;
+    int corAtual = 1;
+    size_t contador = 0;
+    while (get<2>(*min_element(cores.begin(), cores.end(),[](tuple<size_t, int, int> &a, tuple<size_t, int, int> &b) { return get<2>(a) < get<2>(b);})) == 0) {
+        vizinhos = retornarVizinhos(get<0>(cores.at(contador)));
+        for(size_t var = 0; var < size_t(cores.size()) ; var++){
+            if(get<2>(cores.at(var)) == 0 && (find(vizinhos.begin(), vizinhos.end(), get<0>(cores.at(var))) == vizinhos.end())){
+                get<2>(cores.at(var)) = corAtual;
+            }
+        }
+        corAtual++;
+        contador++;
+    }
+    return cores;
 }
 
 auto Grafo::dsatur() -> vector<int> {
@@ -131,53 +124,32 @@ auto Grafo::dsatur() -> vector<int> {
 
     for (int var = 0; var < this->label.size(); var++)
         grau.push_back( make_pair(verticeGrau(var) ,var) );
-    /*
-    for (int var = 0;var < grau.size(); var++) {
-        cout << grau.at(var).first << " : " <<  grau.at(var).second << endl;
-    }
-    cout << endl;
-    */
 
     sort(grau.begin(), grau.end());
     reverse(grau.begin(), grau.end());
 
-    //cout << "A: " << grau.at(4).second <<" B: "<< grau.at(1).second <<" C: "<< grau.at(3).second <<" D: "<< grau.at(2).second <<" E: "<< grau.at(0).second <<endl;
-    /*
-    sort(grau.begin(), grau.end(), [](pair<int, int> const& l, pair<int, int> const& r) {
-        return l.first > r.first;
-    });
-    */
     bool trava = true;
     int id = 0, cor, t = 0;
     while (trava) {
         cor = 1;
         vector<int> vi = retornarVizinhos(grau.at(id).second);
-/*
-        for(int var : vi)
-            cout << var << '|';
-        cout << endl;
-*/
+
         for (int var = 0;var < vi.size() ;) {
             int cot;
             for(int var1 = 0;var1 < grau.size();var1++){
                 if(grau.at(var1).second == vi.at(var))
                     cot = var1;
             }
-//          cout << cot <<"|"<<cor << endl;
 
             if(paleta.at(cot) == cor){
                 cor++;
                 var = 0;
             }else
                 var++;
-   //         cout<<var<<endl;
         }
         paleta.at(id) = cor;
 
         for (int var = 0; var < paleta.size(); var++) {
-            //vector<int> vec = retornarVizinhos(grau.at(var).second);
-            /*if(var == id)
-                var++;*/
             bool tem_cor = false;
             for(int var_0 : retornarVizinhos(grau.at(var).second)){
                 if(paleta.at(var_0) == cor && id != var_0)
@@ -186,30 +158,7 @@ auto Grafo::dsatur() -> vector<int> {
             if(existeAresta(grau.at(id).second, grau.at(var).second) > 0.0 && !tem_cor)
                 saturacao.at(var) += 1;
         }
-        /*
-        cout << "labe: ";
-        for (int var = 0;var < grau.size(); var++) {
-            cout << this->label.at(grau.at(var).second) << "|";
-        }
-        cout << endl;
 
-        cout << "Grau: ";
-        for (int var = 0;var < grau.size(); var++) {
-            cout << grau.at(var).first << "|";
-        }
-        cout << endl;
-
-        cout << "Satu: ";
-        for(int var : saturacao)
-            cout << var << '|';
-        cout << endl;
-
-        cout << "Pale: ";
-        for(int var : paleta)
-            cout << var << '|';
-        cout << endl;
-        */
-        //vector<int> vetJC;
         if(id != paleta.size() - 1){
         vector< pair<int, int> > maiorSaturacao;
         for(int i = 0; i < saturacao.size(); i++){
@@ -231,15 +180,9 @@ auto Grafo::dsatur() -> vector<int> {
                 }
             }
         }
-        /*
-        cout << "Label: " << label.at(maiorSaturacao.at(0).first) << endl;
-        cout << "Index: " << maiorSaturacao.at(0).first << endl;
-        cout << "Grau: " << maiorSaturacao.at(0).second << endl;
-//        trava = false;
-        */
+
         id = maiorSaturacao.at(0).first;
         }
-        //cout << "id: " << id << endl;
         int s = 0;
         for (int var = 0; var < paleta.size(); ++var) {
             if(paleta.at(var) != 0)
@@ -257,7 +200,7 @@ int Grafo::verticeGrau(string label){
     return this->retornarVizinhos(index).size();
 }
 
-int Grafo::verticeGrau(int index){
+int Grafo::verticeGrau(size_t index){
     return this->retornarVizinhos(index).size();
 }
 
@@ -331,4 +274,5 @@ auto Grafo::kruskal() -> vector<tuple<size_t, size_t, double>> {
     control.clear();
     return solution;
 }
+
 Grafo::~Grafo() = default;

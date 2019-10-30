@@ -129,12 +129,15 @@ void exemploWelshPowell(){
 
     //matriz->imprimeGrafo();
 
-    vector<int> r = matriz->welshPowell();
+    vector<tuple<size_t, int, int>> r = matriz->welshPowell();
 
+    cout << get<2>(*max_element(r.begin(), r.end())) << endl;
+    /*
     cout << "|";
-    for(int var : r)
-        cout<< var << "|";
+    for(auto var : r)
+        cout<< get<2>(var) << "|";
     cout << endl;
+    */
 }
 
 void exemploDsatur(){
@@ -146,11 +149,10 @@ void exemploDsatur(){
     matriz->inserirVertice("E");
 
     matriz->inserirAresta(0,1);
-    matriz->inserirAresta(0,3);
-    matriz->inserirAresta(1,4);
     matriz->inserirAresta(1,2);
-    matriz->inserirAresta(2,4);
+    matriz->inserirAresta(2,3);
     matriz->inserirAresta(3,4);
+    matriz->inserirAresta(4,0);
 
     //matriz->imprimeGrafo();
 
@@ -183,7 +185,10 @@ void exemploPrim(){
     matriz->inserirAresta(3,5,4);
 
     //cout << matriz->kruskal() << endl;
-    //cout << matriz->prim(2) << endl;
+    double so = 0;
+    for(tuple<size_t, size_t, double> s : matriz->kruskal())
+        so += get<2>(s);
+    cout << so << endl;
     //matriz->imprimeGrafo();
 }
 /*
@@ -211,6 +216,7 @@ int main() {
     //500vertices50%Arestas
     //500vertices100%Arestas
     //1000vertices25%Arestas
+    /*
     GrafoMatriz * grafo = nullptr;
     grafo = lerArquivo<GrafoMatriz>(grafo,"../assets/GrafosMST/1000vertices25%Arestas.txt");
     auto start = std::chrono::high_resolution_clock::now();
@@ -220,24 +226,27 @@ int main() {
     chrono::duration<double> time = chrono::duration<double>(end - start);
 
     cout << time.count() << " seconds." << endl;
+    */
 
-    //test<int>([&grafo]() { return grafo->prim(2); });
+    GrafoMatriz * grafo = nullptr;
+    grafo = lerArquivo<GrafoMatriz>(grafo,"../assets/teste.txt");
+    auto r = grafo->welshPowell();
+
+    cout << get<2>(*max_element(r.begin(), r.end(),[](tuple<size_t, int, int> &a, tuple<size_t, int, int> &b) { return get<2>(a) < get<2>(b);})) << endl;
 
     /*
-    chrono::time_point<chrono::system_clock> start, end;
-    start = chrono::system_clock::now();
-
-    cout << matriz->prim(2) << endl;
-
-    end = chrono::system_clock::now();
-    int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end-start).count();
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-    std::cout << "finished computation at " << ctime(&end_time)
-                  << "elapsed time: " << elapsed_seconds << "s\n";
+    cout << "|";
+    for(auto var : r)
+        cout<< get<2>(var) << "|";
+    cout << endl;
     */
-    //matriz->imprimeGrafo();
-    //cout << matriz->kruskal() << endl;
+    /*
+    cout << "|";
+    for(int var : r)
+        cout<< var << "|";
+    cout << endl;*/
+    //exemploWelshPowell();
+    //exemploDsatur();
     //exemploPrim();
     return 0;
 }
