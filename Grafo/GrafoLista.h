@@ -14,16 +14,13 @@ class GrafoLista : public Grafo
     public:
         GrafoLista(bool direcionado, bool ponderado);
 
-        string labelVertice(int indice);
-        bool inserirVertice(string label);
-        bool inserirAresta(int origem, int destino, int peso = 1);
-        double existeAresta(int origem, int destino);
-        double existeAresta(size_t origem, size_t destino);
-        vector<int> retornarVizinhos(int vertice);
-        vector<size_t> retornarVizinhos(size_t vertice);
-        bool validaLabel(string label);
+        auto labelVertice(size_t indice) -> string;
+        auto inserirVertice(string label) -> bool;
+        auto inserirAresta(size_t origem, size_t destino, double peso = 1.0) -> bool;
+        auto existeAresta(size_t origem, size_t destino) -> double;
+        auto retornarVizinhos(size_t vertice) -> vector<size_t>;
 
-        void imprimeGrafo();
+        auto imprimeGrafo() -> void;
 };
 
 #endif // GRAFOLISTA_H

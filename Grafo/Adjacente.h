@@ -1,13 +1,14 @@
 #ifndef VERTICELIGACAO_H
 #define VERTICELIGACAO_H
+#include <vector>
 
 class Adjacente
 {
     public:
-        int indice;
-        int peso;
+        size_t indice;
+        double peso;
 
-        Adjacente(int indice, int peso) {
+        Adjacente(size_t indice, double peso) {
             this->indice = indice;
             this->peso = peso;
         }

@@ -4,50 +4,52 @@ Grafo::Grafo(bool direcionado, bool ponderado)
 {
     this->direcionado = direcionado;
     this->ponderado = ponderado;
-    this->qtdVertice = 0;
 }
 
-string Grafo::labelVertice(int indice){
+auto Grafo::labelVertice(size_t indice) -> string
+{
     return this->label[indice];
 }
 
-bool Grafo::validaLabel(string label){
-    for (int var = 0; var < qtdVertice; ++var)
-        return !(this->label[var] == label);
-
+auto Grafo::validaLabel(string label) -> bool
+{
+    for(auto var : this->label){
+        if(var.compare(label) == 0)
+            return false;
+    }
     return true;
 }
 
-bool Grafo::getDirecionado()
+auto Grafo::getDirecionado() -> bool
 {
     return direcionado;
 }
 
-bool Grafo::getPonderado()
+auto Grafo::getPonderado() -> bool
 {
     return ponderado;
 }
 
-vector<int> Grafo::busca_Profundidade(int indice)
+auto Grafo::busca_Profundidade(size_t indice) -> vector<size_t>
 {
-    vector<int> resultado;
-    vector<int> visitados(this->label.size(),0);
-    int qtdVisitados = 0;
-    stack<int> pilha;
+    vector<size_t> resultado;
+    vector<size_t> visitados(this->label.size(),0);
+    size_t qtdVisitados = 0;
+    stack<size_t> pilha;
     pilha.push(indice);
 
     while (!pilha.empty()) {
-        int nodo = pilha.top();
+        size_t nodo = pilha.top();
 
         if (visitados.at(nodo) == 0) {
             resultado.push_back(nodo);
             visitados.at(nodo) = ++qtdVisitados;
         }
 
-        int qtd_visinhos = 0;
-        vector<int> vizinho = retornarVizinhos(nodo);
+        size_t qtd_visinhos = 0;
+        vector<size_t> vizinho = retornarVizinhos(nodo);
 
-        for (int var = 0; var < vizinho.size(); var++) {
+        for (size_t var = 0; var < vizinho.size(); var++) {
             if(visitados[vizinho[var]] == 0){
                 pilha.push(vizinho[var]);
                 break;
@@ -56,37 +58,36 @@ vector<int> Grafo::busca_Profundidade(int indice)
         }
 
         if(qtd_visinhos == vizinho.size())
-           pilha.pop();
+            pilha.pop();
     }
 
     return resultado;
 }
 
-vector<int> Grafo::busca_Largura(int indice){
-    vector<int> resultado;
-    vector<int> visitados(this->label.size(),0);
-    int qtdVisitados = 0;
-    queue<int> fila;
+auto Grafo::busca_Largura(size_t indice) -> vector<size_t>
+{
+    vector<size_t> resultado;
+    vector<size_t> visitados(this->label.size(),0);
+    size_t qtdVisitados = 0;
+    queue<size_t> fila;
     fila.push(indice);
 
     while (!fila.empty()) {
-        int nodo = fila.front();
+        size_t nodo = fila.front();
 
         if (visitados[nodo] == 0) {
             resultado.push_back(nodo);
             visitados[nodo] = ++qtdVisitados;
         }
 
-        vector<int> vizinho = retornarVizinhos(nodo);
+        vector<size_t> vizinho = retornarVizinhos(nodo);
 
-        for (int var = 0; var < vizinho.size(); ++var) {
+        for (size_t var = 0; var < vizinho.size(); ++var) {
             if(visitados[vizinho[var]] == 0){
                 fila.push(vizinho[var]);
-
             }
-
         }
-           fila.pop();
+        fila.pop();
     }
     return resultado;
 }
@@ -95,19 +96,30 @@ auto Grafo::welshPowell() -> vector<tuple<size_t, int, int>>
 {
     vector<tuple<size_t, int, int>> cores;
 
-    for(size_t var = 0; var < size_t(label.size()); var++)
+    for(size_t var = 0; var < label.size(); var++)
         cores.push_back(make_tuple(var, verticeGrau(var), 0));
 
     sort(cores.begin(), cores.end(),[](tuple<size_t, int, int> &a, tuple<size_t, int, int> &b){return get<1>(a) > get<1>(b);});
 
-    vector<size_t> vizinhos;
+
     int corAtual = 1;
     size_t contador = 0;
+    bool vizinhoCor = false;
     while (get<2>(*min_element(cores.begin(), cores.end(),[](tuple<size_t, int, int> &a, tuple<size_t, int, int> &b) { return get<2>(a) < get<2>(b);})) == 0) {
-        vizinhos = retornarVizinhos(get<0>(cores.at(contador)));
-        for(size_t var = 0; var < size_t(cores.size()) ; var++){
+        auto vizinhos = retornarVizinhos(get<0>(cores.at(contador)));
+        for(size_t var = contador; var < cores.size() ; var++){
             if(get<2>(cores.at(var)) == 0 && (find(vizinhos.begin(), vizinhos.end(), get<0>(cores.at(var))) == vizinhos.end())){
-                get<2>(cores.at(var)) = corAtual;
+                for(size_t vizinhoDoVizinho : retornarVizinhos(get<0>(cores.at(var)))){
+                    for(auto vec : cores){
+                        if(get<0>(vec) == vizinhoDoVizinho && get<2>(vec) == corAtual){
+                            vizinhoCor = true;
+                            break;
+                        }
+                    }
+                }
+                if(!vizinhoCor)
+                    get<2>(cores.at(var)) = corAtual;
+                vizinhoCor = false;
             }
         }
         corAtual++;
@@ -116,95 +128,77 @@ auto Grafo::welshPowell() -> vector<tuple<size_t, int, int>>
     return cores;
 }
 
-auto Grafo::dsatur() -> vector<int> {
-    //vector<tuple <int,int,int,int,int>> c;
-    vector< pair<int, int> > grau;
-    vector<int> paleta(this->label.size(), 0);
-    vector<int> saturacao(this->label.size(), 0);
+auto Grafo::dsatur() -> vector<tuple<size_t, int, int, int>>
+{
+    vector<tuple<size_t, int, int, int>> cores;
+    
+    for(size_t var = 0; var < label.size(); var++)
+        cores.push_back(make_tuple(var, verticeGrau(var), 0, 0));
 
-    for (int var = 0; var < this->label.size(); var++)
-        grau.push_back( make_pair(verticeGrau(var) ,var) );
+    sort(cores.begin(), cores.end(),[](tuple<size_t, int, int, int> &a, tuple<size_t, int, int, int> &b){ return get<1>(a) > get<1>(b); });
 
-    sort(grau.begin(), grau.end());
-    reverse(grau.begin(), grau.end());
+    int corAtual;
+    size_t contador = 0;
 
-    bool trava = true;
-    int id = 0, cor, t = 0;
-    while (trava) {
-        cor = 1;
-        vector<int> vi = retornarVizinhos(grau.at(id).second);
-
-        for (int var = 0;var < vi.size() ;) {
-            int cot;
-            for(int var1 = 0;var1 < grau.size();var1++){
-                if(grau.at(var1).second == vi.at(var))
-                    cot = var1;
-            }
-
-            if(paleta.at(cot) == cor){
-                cor++;
-                var = 0;
-            }else
-                var++;
-        }
-        paleta.at(id) = cor;
-
-        for (int var = 0; var < paleta.size(); var++) {
-            bool tem_cor = false;
-            for(int var_0 : retornarVizinhos(grau.at(var).second)){
-                if(paleta.at(var_0) == cor && id != var_0)
-                    tem_cor = true;
-            }
-            if(existeAresta(grau.at(id).second, grau.at(var).second) > 0.0 && !tem_cor)
-                saturacao.at(var) += 1;
-        }
-
-        if(id != paleta.size() - 1){
-        vector< pair<int, int> > maiorSaturacao;
-        for(int i = 0; i < saturacao.size(); i++){
-            if(paleta.at(i) == 0){
-                if(maiorSaturacao.size()) {
-                    if(saturacao.at(i) > maiorSaturacao.at(0).second) {
-                        maiorSaturacao.at(0).first = i;
-                        maiorSaturacao.at(0).second = saturacao.at(i);
-                    }
-                    else if (saturacao.at(i) == maiorSaturacao.at(0).second) {
-                        if(grau.at(i).first > grau.at(maiorSaturacao.at(0).first).first) {
-                            maiorSaturacao.at(0).first = i;
-                            maiorSaturacao.at(0).second = saturacao.at(i);
-                        }
-                    }
-                }
-                else {
-                    maiorSaturacao.push_back(make_pair(i, saturacao.at(i)));
-                }
+    while (get<3>(*min_element(cores.begin(), cores.end(),[](tuple<size_t, int, int, int> &a, tuple<size_t, int, int, int> &b) { return get<3>(a) < get<3>(b);})) == 0) {
+        corAtual = 1;
+        for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
+            if(get<3>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) == corAtual){
+                corAtual++;
             }
         }
-
-        id = maiorSaturacao.at(0).first;
+        //cout << corAtual << endl;
+        bool saturacao = true;
+        for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
+            for(auto var : retornarVizinhos(get<0>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })))){
+                if(get<3>(*find_if(cores.begin(), cores.end(),[&var](tuple<size_t, int, int, int> &a){ return get<0>(a) == var; })) == corAtual)
+                    saturacao = false;
+            }
+            if(saturacao)
+                get<2>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) += 1;
         }
-        int s = 0;
-        for (int var = 0; var < paleta.size(); ++var) {
-            if(paleta.at(var) != 0)
-                s++;
-        }
-        if(s == paleta.size())
-            trava = false;
 
+        get<3>(cores.at(contador)) = corAtual;
+        /*
+        cout << "Saturacao:" << endl;
+        for(auto var : cores)
+            cout << '|' << get<0>(var);
+        cout << endl;
+        for(auto var : cores)
+            cout << '|' << get<1>(var);
+        cout << endl;
+        for(auto var : cores)
+            cout << '|' << get<2>(var);
+        cout << endl;
+        for(auto var : cores)
+            cout << '|' << get<3>(var);
+        cout << endl;
+        */
+
+        tuple<size_t, int, int, int> prox = make_tuple(-1, -1, -1, -1);
+        for (auto var : cores) {
+            if(get<2>(var) > get<2>(prox) && get<3>(var) == 0 /*&& get<1>(var) != get<1>(prox)*/)
+                prox = var;
+        }
+
+        for (size_t var = 0; var < cores.size(); var++) {
+            if(get<0>(prox) == get<0>(cores.at(var))){
+                contador = var;
+                break;
+            }
+        }
+        //cout << contador << endl;
     }
-    return paleta;
+    return cores;
 }
 
-int Grafo::verticeGrau(string label){
-    int index = find(this->label.begin(), this->label.end(), label) - this->label.begin();
+auto Grafo::verticeGrau(size_t index) -> size_t
+{
     return this->retornarVizinhos(index).size();
 }
 
-int Grafo::verticeGrau(size_t index){
-    return this->retornarVizinhos(index).size();
-}
-
-auto Grafo::prim(size_t index) -> vector<tuple<size_t, size_t, double>> {
+auto Grafo::prim(size_t index) -> vector<tuple<size_t, size_t, double>>
+{
     vector<tuple<size_t, size_t, double>> solution;
     vector<size_t> control(this->label.size());
 
@@ -234,7 +228,8 @@ auto Grafo::prim(size_t index) -> vector<tuple<size_t, size_t, double>> {
     return solution;
 }
 
-auto Grafo::kruskal() -> vector<tuple<size_t, size_t, double>> {
+auto Grafo::kruskal() -> vector<tuple<size_t, size_t, double>>
+{
     vector<tuple<size_t, size_t, double>> solution;
     vector<tuple<size_t, size_t, double>> control;
     vector<vector<size_t>> forest;

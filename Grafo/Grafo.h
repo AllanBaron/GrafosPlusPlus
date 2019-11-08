@@ -24,32 +24,27 @@ class Grafo
         vector<string> label;
         bool direcionado;
         bool ponderado;
-        int qtdVertice;
 
     public:
         Grafo(bool direcionado, bool ponderado);
 
-        bool getPonderado();
-        bool getDirecionado();
+        auto getPonderado() -> bool;
+        auto getDirecionado() -> bool;
 
-        virtual string labelVertice(int indice) = 0;
-        virtual bool validaLabel(string label) = 0;
-        virtual bool inserirVertice(string label) = 0;
-        virtual bool inserirAresta(int origem, int destino, int peso = 1) = 0;
-        virtual double existeAresta(int origem, int destino) = 0;
-        virtual double existeAresta(size_t origem, size_t destino) = 0;
-        virtual vector<int> retornarVizinhos(int vertice) = 0;
-        virtual vector<size_t> retornarVizinhos(size_t vertice) = 0;
-        virtual void imprimeGrafo() = 0;
+        auto labelVertice(size_t indice) -> string;
+        auto validaLabel(string label) -> bool;
+        virtual auto inserirVertice(string label) -> bool = 0;
+        virtual auto inserirAresta(size_t origem, size_t destino, double peso = 1.0) -> bool = 0;
+        virtual auto existeAresta(size_t origem, size_t destino) -> double = 0;
+        virtual auto retornarVizinhos(size_t vertice) -> vector<size_t> = 0;
+        virtual auto imprimeGrafo() -> void = 0;
 
-        vector<int> busca_Profundidade(int indice);
-        vector<int> busca_Largura(int indice);
+        auto busca_Profundidade(size_t indice) -> vector<size_t>;
+        auto busca_Largura(size_t indice) -> vector<size_t>;
 
-        int verticeGrau(string label);
-        int verticeGrau(size_t index);
-        auto welshPowellHELP() -> void;
+        auto verticeGrau(size_t index) -> size_t;
         auto welshPowell() -> vector<tuple<size_t, int, int>>;
-        auto dsatur() -> vector<int>;
+        auto dsatur() -> vector<tuple<size_t, int, int, int>>;
 
         auto prim(size_t index) -> vector<tuple<size_t, size_t, double>>;
         auto kruskal() -> vector<tuple<size_t, size_t, double>>;
