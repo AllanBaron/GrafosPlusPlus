@@ -11,6 +11,7 @@
 
 using namespace std;
 
+
 template <class T>
 Grafo* lerArquivo(string caminhoArquivo){
     ifstream arquivo(caminhoArquivo);
