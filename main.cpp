@@ -61,8 +61,9 @@ int main() {
         matriz->dsatur();
      */
         //matriz->imprimeGrafo();
+
     Grafo *matriz;
-    matriz = lerArquivo<GrafoMatriz>("../assets/trabalho-28cores.txt");
+    matriz = lerArquivo<GrafoMatriz>("../assets/trabalho-234cores.txt");
     auto max = matriz->dsatur();
     cout << get<3>(*max_element(max.begin(), max.end(),[](tuple<size_t, int, int, int> &a, tuple<size_t, int, int, int> &b){ return get<3>(a) < get<3>(b); })) << endl;
 

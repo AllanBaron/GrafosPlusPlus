@@ -142,21 +142,46 @@ auto Grafo::dsatur() -> vector<tuple<size_t, int, int, int>>
 
     while (get<3>(*min_element(cores.begin(), cores.end(),[](tuple<size_t, int, int, int> &a, tuple<size_t, int, int, int> &b) { return get<3>(a) < get<3>(b);})) == 0) {
         corAtual = 1;
-        for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
-            if(get<3>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) == corAtual){
-                corAtual++;
+        bool lock =true;
+        while(lock) {
+            lock = false;
+            for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
+                if(get<3>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) == corAtual){
+                     corAtual++;
+                     lock = true;
+                     break;
+                }
             }
         }
+//        for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
+//            if(get<3>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) == corAtual){
+//                corAtual++;
+//            }
+//        } // errado => blz
+
+
         //cout << corAtual << endl;
         bool saturacao = true;
         for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
-            for(auto var : retornarVizinhos(get<0>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })))){
-                if(get<3>(*find_if(cores.begin(), cores.end(),[&var](tuple<size_t, int, int, int> &a){ return get<0>(a) == var; })) == corAtual)
+            for(auto var : retornarVizinhos(vizinhos)){
+                if(get<3>(*find_if(cores.begin(), cores.end(),[&var](tuple<size_t, int, int, int> &a){ return get<0>(a) == var; })) == corAtual){
                     saturacao = false;
+                    break;
+                }
             }
-            if(saturacao)
+            if(saturacao){
                 get<2>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) += 1;
+                saturacao = false;
+            }
         }
+//        for(auto vizinhos : retornarVizinhos(get<0>(cores.at(contador)))){
+//            for(auto var : retornarVizinhos(get<0>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })))){
+//                if(get<3>(*find_if(cores.begin(), cores.end(),[&var](tuple<size_t, int, int, int> &a){ return get<0>(a) == var; })) == corAtual)
+//                    saturacao = false;
+//            }
+//            if(saturacao)
+//                get<2>(*find_if(cores.begin(), cores.end(),[&vizinhos](tuple<size_t, int, int, int> &a){ return get<0>(a) == vizinhos; })) += 1;
+//        }
 
         get<3>(cores.at(contador)) = corAtual;
         /*
